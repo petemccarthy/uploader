@@ -27,8 +27,7 @@ export const updateImage = ({ id, input }) => {
 export const deleteImage = async ({ id }) => {
   const client = Filestack.init(process.env.REDWOOD_ENV_FILESTACK_API_KEY)
 
-  const image = await db.image.find({ where: { id } })
-
+  const image = await db.image.findUnique({ where: { id } })
   // The `security.handle` is the unique part of the Filestack file's url.
   const handle = image.url.split('/').pop()
 
@@ -43,6 +42,7 @@ export const deleteImage = async ({ id }) => {
   )
 
   await client.remove(handle, security)
+
   return db.image.delete({
     where: { id },
   })
